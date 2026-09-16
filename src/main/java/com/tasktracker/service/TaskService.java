@@ -15,4 +15,6 @@ public interface TaskService {
     List<TaskResponse> getAll(TaskStatus statusFilter);
 
     TaskResponse update(Long id, TaskRequest request);
+
+    void delete(Long id);
 }

@@ -59,4 +59,12 @@ public class TaskServiceImpl implements TaskService {
         taskDao.update(existing);
         return TaskResponse.from(existing);
     }
+
+    @Override
+    public void delete(Long id) {
+        boolean deleted = taskDao.deleteById(id);
+        if (!deleted) {
+            throw ResourceNotFoundException.forTask(id);
+        }
+    }
 }
