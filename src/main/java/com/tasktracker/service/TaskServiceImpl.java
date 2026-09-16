@@ -3,9 +3,12 @@ package com.tasktracker.service;
 import com.tasktracker.dao.TaskDao;
 import com.tasktracker.dto.TaskRequest;
 import com.tasktracker.dto.TaskResponse;
+import com.tasktracker.exception.ResourceNotFoundException;
 import com.tasktracker.model.Task;
 import com.tasktracker.model.TaskStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -25,5 +28,20 @@ public class TaskServiceImpl implements TaskService {
 
         Task saved = taskDao.save(task);
         return TaskResponse.from(saved);
+    }
+
+    @Override
+    public TaskResponse getById(Long id) {
+        Task task = taskDao.findById(id)
+                .orElseThrow(() -> ResourceNotFoundException.forTask(id));
+        return TaskResponse.from(task);
+    }
+
+    @Override
+    public List<TaskResponse> getAll(TaskStatus statusFilter) {
+        List<Task> tasks = statusFilter != null
+                ? taskDao.findByStatus(statusFilter)
+                : taskDao.findAll();
+        return tasks.stream().map(TaskResponse::from).toList();
     }
 }

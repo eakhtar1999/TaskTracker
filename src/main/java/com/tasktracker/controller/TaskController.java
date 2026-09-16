@@ -2,15 +2,14 @@ package com.tasktracker.controller;
 
 import com.tasktracker.dto.TaskRequest;
 import com.tasktracker.dto.TaskResponse;
+import com.tasktracker.model.TaskStatus;
 import com.tasktracker.service.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/tasks")
@@ -27,5 +26,18 @@ public class TaskController {
     public ResponseEntity<TaskResponse> create(@Valid @RequestBody TaskRequest request) {
         TaskResponse created = taskService.create(request);
         return ResponseEntity.created(URI.create("/api/v1/tasks/" + created.id())).body(created);
+    }
+
+    // GET /api/v1/tasks/{id}
+    @GetMapping("/{id}")
+    public ResponseEntity<TaskResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(taskService.getById(id));
+    }
+
+    // GET /api/v1/tasks?status=PENDING
+    @GetMapping
+    public ResponseEntity<List<TaskResponse>> getAll(
+            @RequestParam(required = false) TaskStatus status) {
+        return ResponseEntity.ok(taskService.getAll(status));
     }
 }
