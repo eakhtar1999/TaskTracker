@@ -75,4 +75,39 @@ class TaskControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].status").value("PENDING"));
     }
+
+    @Test
+    void updateModifiesExistingTask() throws Exception {
+        String createPayload = """
+                {"title": "Temp task", "description": "before update", "status": "PENDING"}
+                """;
+
+        String location = mockMvc.perform(post("/api/v1/tasks")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(createPayload))
+                .andReturn().getResponse().getHeader("Location");
+
+        String updatePayload = """
+                {"title": "Temp task - updated", "description": "after update", "status": "COMPLETED"}
+                """;
+
+        mockMvc.perform(put(location)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updatePayload))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("Temp task - updated"))
+                .andExpect(jsonPath("$.status").value("COMPLETED"));
+    }
+
+    @Test
+    void updateNonExistentTaskReturns404() throws Exception {
+        String payload = """
+                {"title": "Does not matter", "description": "no such task", "status": "PENDING"}
+                """;
+
+        mockMvc.perform(put("/api/v1/tasks/999999")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpect(status().isNotFound());
+    }
 }

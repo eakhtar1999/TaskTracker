@@ -44,4 +44,19 @@ public class TaskServiceImpl implements TaskService {
                 : taskDao.findAll();
         return tasks.stream().map(TaskResponse::from).toList();
     }
+
+    @Override
+    public TaskResponse update(Long id, TaskRequest request) {
+        Task existing = taskDao.findById(id)
+                .orElseThrow(() -> ResourceNotFoundException.forTask(id));
+
+        existing.setTitle(request.getTitle());
+        existing.setDescription(request.getDescription());
+        if (request.getStatus() != null) {
+            existing.setStatus(request.getStatus());
+        }
+
+        taskDao.update(existing);
+        return TaskResponse.from(existing);
+    }
 }
