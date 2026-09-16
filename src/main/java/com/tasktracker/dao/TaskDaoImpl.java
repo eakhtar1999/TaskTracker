@@ -97,4 +97,11 @@ public class TaskDaoImpl implements TaskDao {
         int rows = namedJdbcTemplate.update(sql, params);
         return rows > 0;
     }
+
+    @Override
+    public boolean deleteById(Long id) {
+        String sql = "DELETE FROM tasks WHERE id = ?";
+        int rows = jdbcTemplate.update(sql, id);
+        return rows > 0;
+    }
 }

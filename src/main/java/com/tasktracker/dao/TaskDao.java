@@ -17,4 +17,6 @@ public interface TaskDao {
     List<Task> findByStatus(TaskStatus status);
 
     boolean update(Task task);
+
+    boolean deleteById(Long id);
 }

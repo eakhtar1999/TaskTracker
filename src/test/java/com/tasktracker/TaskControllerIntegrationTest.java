@@ -110,4 +110,28 @@ class TaskControllerIntegrationTest {
                         .content(payload))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void deleteRemovesTask() throws Exception {
+        String createPayload = """
+                {"title": "To be deleted", "description": "temporary", "status": "PENDING"}
+                """;
+
+        String location = mockMvc.perform(post("/api/v1/tasks")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(createPayload))
+                .andReturn().getResponse().getHeader("Location");
+
+        mockMvc.perform(delete(location))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get(location))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void deleteNonExistentTaskReturns404() throws Exception {
+        mockMvc.perform(delete("/api/v1/tasks/999999"))
+                .andExpect(status().isNotFound());
+    }
 }
