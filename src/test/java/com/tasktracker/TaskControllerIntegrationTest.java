@@ -134,4 +134,22 @@ class TaskControllerIntegrationTest {
         mockMvc.perform(delete("/api/v1/tasks/999999"))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void createWithInvalidStatusEnumReturns400() throws Exception {
+        String payload = """
+                {"title": "Bad status test", "description": "invalid enum", "status": "NOTASTATUS"}
+                """;
+
+        mockMvc.perform(post("/api/v1/tasks")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void listWithInvalidStatusQueryParamReturns400() throws Exception {
+        mockMvc.perform(get("/api/v1/tasks").param("status", "NOTASTATUS"))
+                .andExpect(status().isBadRequest());
+    }
 }
