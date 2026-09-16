@@ -15,4 +15,6 @@ public interface TaskDao {
     List<Task> findAll();
 
     List<Task> findByStatus(TaskStatus status);
+
+    boolean update(Task task);
 }

@@ -13,4 +13,6 @@ public interface TaskService {
     TaskResponse getById(Long id);
 
     List<TaskResponse> getAll(TaskStatus statusFilter);
+
+    TaskResponse update(Long id, TaskRequest request);
 }

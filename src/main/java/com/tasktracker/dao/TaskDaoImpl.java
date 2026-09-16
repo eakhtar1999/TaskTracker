@@ -79,4 +79,22 @@ public class TaskDaoImpl implements TaskDao {
         MapSqlParameterSource params = new MapSqlParameterSource("status", status.name());
         return namedJdbcTemplate.query(sql, params, rowMapper);
     }
+
+    @Override
+    public boolean update(Task task) {
+        task.setUpdatedAt(LocalDateTime.now());
+        String sql = """
+        UPDATE tasks
+        SET title = :title, description = :description, status = :status, updated_at = :updatedAt
+        WHERE id = :id
+        """;
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("title", task.getTitle())
+                .addValue("description", task.getDescription())
+                .addValue("status", task.getStatus().name())
+                .addValue("updatedAt", Timestamp.valueOf(task.getUpdatedAt()))
+                .addValue("id", task.getId());
+        int rows = namedJdbcTemplate.update(sql, params);
+        return rows > 0;
+    }
 }

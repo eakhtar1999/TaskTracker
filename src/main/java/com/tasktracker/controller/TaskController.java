@@ -40,4 +40,11 @@ public class TaskController {
             @RequestParam(required = false) TaskStatus status) {
         return ResponseEntity.ok(taskService.getAll(status));
     }
+
+    // PUT /api/v1/tasks/{id}
+    @PutMapping("/{id}")
+    public ResponseEntity<TaskResponse> update(@PathVariable Long id,
+                                               @Valid @RequestBody TaskRequest request) {
+        return ResponseEntity.ok(taskService.update(id, request));
+    }
 }
