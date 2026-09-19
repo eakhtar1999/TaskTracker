@@ -13,7 +13,7 @@
 
     <groupId>com.tasktracker</groupId>
     <artifactId>task-tracker</artifactId>
-    <version>1.0.0</version>
+    <version>1.2.0</version>
     <name>task-tracker</name>
     <description>Task Tracker CRUD API - Spring Boot + JdbcTemplate + RowMapper</description>
 
